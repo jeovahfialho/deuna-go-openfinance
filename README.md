@@ -102,3 +102,25 @@ To run the server, use the command `go run main.go` in the root directory of the
 - **Hosting**: The API can be hosted on cloud platforms like AWS, Azure, or GCP for scalability.
 - **Database**: Consider using cloud-based databases like AWS RDS or Google Cloud SQL.
 - **Reasoning**: Cloud technologies offer scalability, reliability, and distributed computing capabilities, making them suitable for online payment platforms.
+
+## Audit Trail Feature
+
+The payment platform includes an audit trail feature to track critical activities. This feature enhances transparency and accountability in the system.
+
+### Implementation Details
+
+- **Audit Log Entries**: Each significant action, such as processing a payment or a refund, is recorded as an audit log entry. These entries include details like timestamp, user ID, action performed, and a descriptive message.
+- **Audit Log Function**: The `AuditLogFunc` in the payment service is responsible for logging these entries. It currently logs to the server's console but can be adapted to log to a file, database, or external logging service.
+- **Usage in Services**: The audit log function is integrated into the payment processing, refund processing, and payment querying services. Whenever these actions are performed, an audit log entry is generated.
+
+### Testing the Audit Trail
+
+To test the audit trail:
+1. Perform actions like payment processing or requesting a refund through the API.
+2. Check the server console or designated log output for audit log entries corresponding to these actions.
+
+### Future Enhancements
+
+- **Persistent Storage**: Implementing a database or file-based storage for audit logs to enable long-term analysis.
+- **Advanced Analysis**: Integration with tools for log analysis and monitoring for detecting patterns and potential issues.
+- **Security Measures**: Ensuring that audit logs do not contain sensitive user information and are stored securely.

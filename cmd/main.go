@@ -12,6 +12,8 @@ import (
 	"payment-platform-solid/pkg/middleware"
 	"payment-platform-solid/pkg/payment"
 
+	"payment-platform-solid/internal/model"
+
 	"github.com/dgrijalva/jwt-go"
 )
 
@@ -73,6 +75,13 @@ func ProtectedHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Access to protected route successful"))
 }
 
+// AuditLog records an entry to the audit trail
+func AuditLog(entry model.AuditLogEntry) {
+	// Example: log to console, but you can modify to log to a file, database, etc.
+	log.Printf("Audit Trail: Timestamp: %v, UserID: %v, Action: %v, Description: %v",
+		entry.Timestamp, entry.UserID, entry.Action, entry.Description)
+}
+
 func main() {
 	secretKey := "huASdHobtia4g96x"
 	authService := NewAuthService(secretKey)
@@ -81,7 +90,7 @@ func main() {
 	// Initialize the storage layer, bank simulator, and payment service
 	store := store.NewStore()
 	bankSimulator := bank.BankSimulator{}
-	paymentService := payment.NewService(store, bankSimulator)
+	paymentService := payment.NewService(store, bankSimulator, AuditLog)
 	paymentHandler := api.PaymentHandler{Service: paymentService}
 
 	// Configure all routes, applying JWT middleware to protected endpoints

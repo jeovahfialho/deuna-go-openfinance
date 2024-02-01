@@ -2,10 +2,10 @@ package model
 
 import "time"
 
-type AuditLog struct {
-	ID        string
-	Action    string
-	UserID    string
-	Timestamp time.Time
-	Details   string
+// AuditLogEntry represents an entry in the audit trail
+type AuditLogEntry struct {
+	Timestamp   time.Time `json:"timestamp"`
+	UserID      string    `json:"userId"`
+	Action      string    `json:"action"`
+	Description string    `json:"description"`
 }

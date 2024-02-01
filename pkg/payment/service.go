@@ -2,22 +2,26 @@ package payment
 
 import (
 	"errors"
+	"fmt"
 	"payment-platform-solid/internal/model"
 	"payment-platform-solid/internal/store"
 	"payment-platform-solid/pkg/bank"
+	"time"
 )
 
 // Service struct that implements the PaymentProcessor interface.
 type Service struct {
 	Store         *store.Store
 	BankSimulator bank.BankSimulator
+	AuditLogFunc  func(entry model.AuditLogEntry) // Function for audit trail logging
 }
 
 // NewService creates a new instance of the payment service.
-func NewService(store *store.Store, bankSimulator bank.BankSimulator) *Service {
+func NewService(store *store.Store, bankSimulator bank.BankSimulator, auditLogFunc func(model.AuditLogEntry)) *Service {
 	return &Service{
 		Store:         store,
 		BankSimulator: bankSimulator,
+		AuditLogFunc:  auditLogFunc, // Assign the audit log function
 	}
 }
 
@@ -42,6 +46,14 @@ func (s *Service) ProcessPayment(payment model.Payment) (model.PaymentResponse, 
 	if err != nil {
 		return model.PaymentResponse{}, err
 	}
+
+	// Record the payment processing in the audit trail
+	s.AuditLogFunc(model.AuditLogEntry{
+		Timestamp:   time.Now(),
+		UserID:      payment.CustomerID,
+		Action:      "ProcessPayment",
+		Description: "Processed payment of amount " + fmt.Sprintf("%f", payment.Amount),
+	})
 
 	// Return a successful response.
 	return response, nil
