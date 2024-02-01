@@ -1,102 +1,104 @@
-# Online Payment Platform
 
-This project implements a basic online payment platform using Go, adhering to SOLID principles. It provides APIs for processing payments, querying payment details, and processing refunds, along with a bank simulator for the transaction process.
+# Payment Platform API
+
+This API provides a platform for processing payments, querying payment details, and handling refunds. It includes JWT authentication for secure access to endpoints.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+To start using this API, run the server and use an API client like Postman to make requests.
 
-### Prerequisites
+## Authentication
 
-- Go 1.17 or later
+Before accessing the protected routes, obtain a JWT token by authenticating through the login endpoint.
 
-### Installing
+### Login Endpoint
 
-Clone the repository to your local machine:
+- **URL**: `/login`
+- **Method**: `POST`
+- **Body**:
+  ```json
+  {
+    "username": "user",
+    "password": "password"
+  }
+  ```
+- **Response**: JWT Token
 
-```bash
-git clone https://yourrepositoryurl/payment-platform-solid.git
-cd payment-platform-solid
-```
+## Protected Endpoints
 
-Initialize the module (if not already done):
-
-```bash
-go mod init payment-platform-solid
-```
-
-Run the application:
-
-```bash
-go run cmd/main.go
-```
-
-The server will start on port 8080.
-
-## API Endpoints
-
-The following API endpoints are available:
+Use the JWT token obtained from the login endpoint as a Bearer token in the Authorization header for the following requests.
 
 ### Process Payment
 
 - **URL**: `/process-payment`
 - **Method**: `POST`
-- **Data Params**
-
-```json
-{
-  "ID": "payment123",
-  "MerchantID": "merchant123",
-  "CustomerID": "customer123",
-  "Amount": 100.50
-}
-```
-
-- **Success Response**:
-
-```json
-{
-  "ID": "payment123",
-  "Status": "Success"
-}
-```
+- **Headers**:
+  - `Authorization: Bearer <JWT_TOKEN>`
+- **Body**: 
+  ```json
+  {
+    "amount": 100.0,
+    "description": "Payment description"
+  }
+  ```
 
 ### Query Payment Details
 
-- **URL**: `/query-payment?id=payment123`
+- **URL**: `/query-payment`
 - **Method**: `GET`
-- **URL Params**: `id=[string]`
-
-- **Success Response**:
-
-```json
-{
-  "ID": "payment123",
-  "MerchantID": "merchant123",
-  "CustomerID": "customer123",
-  "Amount": 100.50,
-  "Status": "Success",
-  "CreatedAt": "2024-02-01T15:04:05Z"
-}
-```
+- **Headers**:
+  - `Authorization: Bearer <JWT_TOKEN>`
+- **Query Parameters**:
+  - `id`: Payment ID
 
 ### Process Refund
 
 - **URL**: `/process-refund`
 - **Method**: `POST`
-- **Data Params**
+- **Headers**:
+  - `Authorization: Bearer <JWT_TOKEN>`
+- **Body**: 
+  ```json
+  {
+    "paymentId": "payment123",
+    "amount": 50.0
+  }
+  ```
 
-```json
-{
-  "PaymentID": "payment123",
-  "Amount": 100.50
-}
-```
+### Protected Route Example
 
-- **Success Response**:
+- **URL**: `/protected-route`
+- **Method**: `GET`
+- **Headers**:
+  - `Authorization: Bearer <JWT_TOKEN>`
 
-```json
-{
-  "Status": "Success"
-}
-```
+## Running the Server
+
+To run the server, use the command `go run main.go` in the root directory of the project. Ensure all dependencies are installed.
+
+## Considerations
+
+### Execution of the Solution
+
+- **Setup**: Ensure Go is installed on your system. Clone the repository and navigate to the project directory.
+- **Running the API**: Execute `go run main.go` to start the server. The API will be accessible on `localhost:8080`.
+- **Dependencies**: This project requires the `github.com/dgrijalva/jwt-go` package for JWT handling. Use `go get` to install this package.
+
+### Assumptions
+
+- User authentication is simulated; in a production environment, integrate with a real user database.
+- JWT tokens are used for simplicity in securing API endpoints.
+- The payment processing logic is a placeholder and should be replaced with actual payment gateway integration.
+
+### Areas for Improvement
+
+- **Security**: Implement more robust user authentication and authorization mechanisms.
+- **Database Integration**: Connect to a real database for user and payment data management.
+- **Error Handling**: Enhance error handling and logging for better debugging and traceability.
+- **Scalability**: Optimize the application for scalability and high availability.
+
+### Cloud Technologies
+
+- **Hosting**: The API can be hosted on cloud platforms like AWS, Azure, or GCP for scalability.
+- **Database**: Consider using cloud-based databases like AWS RDS or Google Cloud SQL.
+- **Reasoning**: Cloud technologies offer scalability, reliability, and distributed computing capabilities, making them suitable for online payment platforms.
