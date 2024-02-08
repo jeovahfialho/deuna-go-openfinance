@@ -23,9 +23,7 @@ func LoginHandler(authService *AuthService) http.HandlerFunc {
 			return
 		}
 
-		// Aqui, você pode adicionar a lógica de autenticação real
-		// Por enquanto, vamos assumir que qualquer usuário é autenticado com sucesso
-		userID := "simulatedUserID" // Este deveria ser o ID do usuário autenticado
+		userID := "simulatedUserID"
 
 		token, err := authService.GenerateToken(userID)
 		if err != nil {

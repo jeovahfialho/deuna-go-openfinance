@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-	"time"
 
 	"payment-platform-solid/internal/store"
 	"payment-platform-solid/pkg/api"
@@ -13,8 +12,6 @@ import (
 	"payment-platform-solid/pkg/payment"
 
 	"payment-platform-solid/internal/model"
-
-	"github.com/dgrijalva/jwt-go"
 )
 
 // AuthService struct for handling JWT token generation
@@ -25,16 +22,6 @@ type AuthService struct {
 // NewAuthService creates a new instance of AuthService
 func NewAuthService(secretKey string) *AuthService {
 	return &AuthService{SecretKey: secretKey}
-}
-
-// GenerateToken generates a JWT token for a given user ID
-func (s *AuthService) GenerateToken(userID string) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_id": userID,
-		"exp":     jwt.TimeFunc().Add(24 * time.Hour).Unix(),
-	})
-
-	return token.SignedString([]byte(s.SecretKey))
 }
 
 // ProtectedHandler is an example of a protected route
