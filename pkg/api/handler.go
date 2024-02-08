@@ -28,7 +28,7 @@ func (h *PaymentHandler) ProcessPayment(w http.ResponseWriter, r *http.Request) 
 }
 
 func (h *PaymentHandler) QueryPaymentDetails(w http.ResponseWriter, r *http.Request) {
-	// Assume que o ID do pagamento é passado como parâmetro na URL
+
 	paymentID := r.URL.Query().Get("id")
 	if paymentID == "" {
 		http.Error(w, "Payment ID is required", http.StatusBadRequest)
@@ -59,5 +59,3 @@ func (h *PaymentHandler) ProcessRefund(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(response)
 }
-
-// Implement other handlers (QueryPaymentDetails, ProcessRefund) in a similar fashion
